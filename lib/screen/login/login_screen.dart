@@ -23,7 +23,7 @@ class LoginScreen extends StatelessWidget {
               Container(
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(color: Colors.transparent),
-                margin: const EdgeInsets.all(24.0),
+                margin: const EdgeInsets.all(8.0),
                 padding: const EdgeInsets.all(16.0),
                 child: const Text(
                   'LOGIN',
@@ -36,12 +36,12 @@ class LoginScreen extends StatelessWidget {
               ),
               Container(
                 width: width * 0.6,
-                height: 200,
+                height: 180,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     fit: BoxFit.contain,
                     image: AssetImage(
-                      'assets/images/login-image.png',
+                      'assets/images/login/login.png',
                     ),
                   ),
                 ),
@@ -323,6 +323,7 @@ class LoginScreen extends StatelessWidget {
               ),
           Container(
             alignment: Alignment.center,
+            margin: const EdgeInsets.only(bottom: 15.0),
             child: ElevatedButton(
               onPressed: () {
                 Get.to(() => const RegisterScreen());

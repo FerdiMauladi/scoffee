@@ -6,6 +6,7 @@ import 'package:scoffee/screen/login/login_screen.dart';
 class ProfileController extends BaseController {
   final storageSecure = const FlutterSecureStorage();
 
+
   Future logout() async {
     final String? token = await storageSecure.read(key: 'token');
     try {

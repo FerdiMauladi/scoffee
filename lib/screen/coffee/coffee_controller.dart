@@ -6,11 +6,10 @@ import 'package:scoffee/data/model/dummy_home_model.dart';
 class CoffeeController extends BaseController {
   List<DummyHomeModel> _listDataDummy = <DummyHomeModel>[];
 
-  List<DummyHomeModel> get listDataDummy => List.unmodifiable(_listDataDummy);
+  List<DummyHomeModel> get listDataDummy => _listDataDummy;
   List<List<DummyHomeModel>> _listAllDataDummy = [];
 
-  List<List<DummyHomeModel>> get listAllDataDummy =>
-      List.unmodifiable(_listAllDataDummy);
+  List<List<DummyHomeModel>> get listAllDataDummy => _listAllDataDummy;
 
   int currentPage = 0;
   List<List<DummyHomeModel>> listAllDummy = [];

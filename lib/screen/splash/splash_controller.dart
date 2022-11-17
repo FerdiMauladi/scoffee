@@ -13,7 +13,7 @@ class SplashController extends BaseController {
   @override
   void onInit() {
     getToken();
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 3), () async {
       if (token != null && token != '-') {
         Get.offAll(() => const BottomAppBar());
       }

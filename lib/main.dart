@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:scoffee/binding/global_binding.dart';
 import 'package:scoffee/screen/splash/splash_screen.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.dark,
+      statusBarColor: Colors.black,
+    ),
+  );
   WidgetsFlutterBinding.ensureInitialized();
   GlobalBinding().dependencies();
   runApp(const Scoffee());

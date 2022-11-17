@@ -19,7 +19,7 @@ class EventController extends BaseController {
   Future<void> fetchPage(int pageKey) async {
     try {
       final newItems = await repository.getDataEvent(pageKey);
-      final isLastPage = newItems!.data!.length < newItems.to!;
+      final isLastPage = newItems!.nextPageUrl == null;
       if (isLastPage) {
         pagingController.appendLastPage(newItems.data!);
       } else {

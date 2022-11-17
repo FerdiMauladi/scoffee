@@ -107,7 +107,7 @@ class CoffeeScreen extends StatelessWidget {
                               ),
                               child: Text(
                                 dataIndex,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -133,6 +133,7 @@ class CoffeeScreen extends StatelessWidget {
                     },
                     itemBuilder: (context, index) {
                       var dataList = controller.listAllDummy[index];
+                      print(dataList);
                       return CustomScrollView(
                         physics: const AlwaysScrollableScrollPhysics(
                           parent: BouncingScrollPhysics(),

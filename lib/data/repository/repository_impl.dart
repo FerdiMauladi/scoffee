@@ -51,7 +51,7 @@ class RepositoryImpl implements Repository {
   Future logout(String token) async {
     network.dio.options.headers['Authorization'] = 'Bearer $token';
     try {
-      final response = await network.dio.get('/logout');
+      final response = await network.dio.post('/logout');
       return response;
     } on DioError catch (e) {
       throw Exception(e.message);
