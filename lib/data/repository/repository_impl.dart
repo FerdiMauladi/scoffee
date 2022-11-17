@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart' hide Response;
+import 'package:scoffee/data/model/event_model.dart';
 import 'package:scoffee/data/model/login_model.dart';
-import 'package:scoffee/data/model/toko_model.dart';
 import 'package:scoffee/data/network_core.dart';
 import 'package:scoffee/data/repository/repository.dart';
 
@@ -11,7 +11,8 @@ class RepositoryImpl implements Repository {
   final storageSecure = const FlutterSecureStorage();
 
   @override
-  Future<LoginModel> login({required String email, required String password}) async {
+  Future<LoginModel> login(
+      {required String email, required String password}) async {
     try {
       Response response = await network.dio.post(
         '/login',
@@ -30,12 +31,15 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future register({required String email, required String password, required String name}) async {
+  Future register(
+      {required String email,
+      required String password,
+      required String name}) async {
     try {
       Response response = await network.dio.post('/register', data: {
-        'name' : name,
-        'email' : email,
-        'password' : password,
+        'name': name,
+        'email': email,
+        'password': password,
       });
       return response;
     } on DioError catch (e) {
@@ -54,4 +58,25 @@ class RepositoryImpl implements Repository {
     }
   }
 
+  @override
+  Future<EventModel?> getDataEvent(int pageKey) async {
+    // network.dio.options.headers['Authorization'] = 'Bearer $token';
+    var token = await storageSecure.read(key: "token");
+    try {
+      final response = await network.dio.get(
+        '/events',
+        queryParameters: {
+          "page": pageKey
+        },
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token"
+          }
+        )
+      );
+      return EventModel.fromJson(response.data["data"]);
+    } on DioError catch (e) {
+      throw Exception(e.message);
+    }
+  }
 }

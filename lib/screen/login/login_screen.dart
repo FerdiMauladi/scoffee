@@ -12,6 +12,8 @@ class LoginScreen extends StatelessWidget {
     return GetBuilder<LoginController>(
       init: LoginController(),
       builder: (controller) {
+        var height = Get.height;
+        var width = Get.width;
         return Scaffold(
           backgroundColor: const Color(0xFF674109),
           body: ListView(
@@ -29,6 +31,18 @@ class LoginScreen extends StatelessWidget {
                     color: Colors.white,
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Container(
+                width: width * 0.6,
+                height: 200,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.contain,
+                    image: AssetImage(
+                      'assets/images/login-image.png',
+                    ),
                   ),
                 ),
               ),

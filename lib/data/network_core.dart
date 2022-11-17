@@ -13,6 +13,7 @@ class NetworkCore {
         sendTimeout: 30000,
         headers: {
           'accept' : 'application/json',
+
         }
     );
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));

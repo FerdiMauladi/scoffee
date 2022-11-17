@@ -1,7 +1,5 @@
-
-
+import 'package:scoffee/data/model/event_model.dart';
 import 'package:scoffee/data/model/login_model.dart';
-import 'package:scoffee/data/model/toko_model.dart';
 
 abstract class Repository {
   Future<LoginModel> login({
@@ -16,4 +14,5 @@ abstract class Repository {
   });
 
   Future logout(String token);
+  Future<EventModel?> getDataEvent(int pageKey);
 }
