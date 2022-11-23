@@ -7,6 +7,10 @@ class StorageCore {
     await storage.write(key: 'token', value: token);
   }
 
+  void saveId (String id) async {
+    await storage.write(key: 'id', value: id);
+  }
+
   void deleteToken () async {
     await storage.delete(key: 'token');
   }

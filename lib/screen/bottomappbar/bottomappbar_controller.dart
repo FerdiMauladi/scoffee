@@ -1,7 +1,7 @@
 import 'package:scoffee/base/base_controller.dart';
-import 'package:scoffee/screen/coffee/coffee_screen.dart';
-import 'package:scoffee/screen/discuss/discuss_screen.dart';
-import 'package:scoffee/screen/event/event_screen.dart';
+import 'package:scoffee/screen/coffee/home/coffee_screen.dart';
+import 'package:scoffee/screen/discuss/home/discuss_screen.dart';
+import 'package:scoffee/screen/event/home/event_screen.dart';
 import 'package:scoffee/screen/profile/profile_screen.dart';
 
 class BottomAppBarController extends BaseController {

@@ -25,7 +25,11 @@ class LoginController extends BaseController {
     try {
       await repository
           .login(email: email, password: password)
-          .then((data) => storage.saveToken(data.data?.token ?? '-'))
+          .then((data) {
+          storage.saveToken(data.data?.token ?? '-');
+          storage.saveId(data.data?.user?.id.toString() ?? '-');
+            return data;
+      })
           .then(
             (_) => Get.showSnackbar(
               const GetSnackBar(
