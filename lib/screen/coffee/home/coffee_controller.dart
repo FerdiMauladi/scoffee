@@ -1,35 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scoffee/base/base_controller.dart';
+import 'package:scoffee/data/model/user_model.dart';
 
 import '../../../data/model/coffee_model.dart';
 
+enum CoffeeViewState {
+  none,
+  loading,
+  error,
+}
+
 class CoffeeController extends BaseController {
-  // List<DummyHomeModel> _listDataDummy = <DummyHomeModel>[];
-  //
-  // List<DummyHomeModel> get listDataDummy => _listDataDummy;
-  // List<List<DummyHomeModel>> _listAllDataDummy = [];
-  //
-  // List<List<DummyHomeModel>> get listAllDataDummy => _listAllDataDummy;
-  //
-  // int currentPage = 0;
-  // List<List<DummyHomeModel>> listAllDummy = [];
-  // bool isLoading = true;
-  // bool isSearching = false;
-  //
-  // final pageController = PageController();
+  UserModel userModel = UserModel();
+  CoffeeViewState _state = CoffeeViewState.none;
+  CoffeeViewState get state => _state;
+
+
   final searchController = TextEditingController();
 
 
   final PagingController<int, Data?> pagingController =
   PagingController(firstPageKey: 1);
 
+  changeState(CoffeeViewState s) {
+    _state = s;
+    update();
+  }
+
   @override
   void onInit() {
+    getUser();
     pagingController.addPageRequestListener((pageKey) {
       fetchPage(pageKey);
     });
     super.onInit();
+  }
+
+  Future getUser() async {
+    changeState(CoffeeViewState.loading);
+    try {
+      var data = await repository.getDataUser();
+      userModel = data!;
+      update();
+      changeState(CoffeeViewState.none);
+    } catch (e) {
+      changeState(CoffeeViewState.error);
+    }
   }
 
   Future<void> fetchPage(int pageKey) async {

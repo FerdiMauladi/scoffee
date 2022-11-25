@@ -8,9 +8,9 @@ class NetworkCore {
   NetworkCore() {
     dio.options = BaseOptions(
         baseUrl: AppConst.baseUrl,
-        connectTimeout: 30000,
-        receiveTimeout: 30000,
-        sendTimeout: 30000,
+        connectTimeout: 20000,
+        receiveTimeout: 20000,
+        sendTimeout: 20000,
         headers: {
           'accept' : 'application/json',
         }

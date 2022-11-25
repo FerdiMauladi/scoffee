@@ -27,6 +27,7 @@ class EventController extends BaseController {
         pagingController.appendPage(newItems.data!, nextPageKey);
       }
     } catch (error) {
+      print(error);
       pagingController.error = error;
     }
   }

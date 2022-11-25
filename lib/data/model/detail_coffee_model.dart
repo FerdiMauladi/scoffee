@@ -4,7 +4,6 @@ class DetailCoffeeModel {
   String? slug;
   String? image;
   String? description;
-  String? story;
   String? createdAt;
   String? updatedAt;
 
@@ -14,7 +13,6 @@ class DetailCoffeeModel {
         this.slug,
         this.image,
         this.description,
-        this.story,
         this.createdAt,
         this.updatedAt});
 
@@ -24,7 +22,6 @@ class DetailCoffeeModel {
     slug = json['slug'];
     image = json['image'];
     description = json['description'];
-    story = json['story'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -36,7 +33,6 @@ class DetailCoffeeModel {
     data['slug'] = slug;
     data['image'] = image;
     data['description'] = description;
-    data['story'] = story;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
     return data;

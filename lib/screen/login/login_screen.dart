@@ -313,7 +313,7 @@ class LoginScreen extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.all(16.0),
                 alignment: Alignment.center,
-                child: Text(
+                child: const Text(
                   'Belum punya akun?',
                   style: TextStyle(
                     color: Colors.white,
@@ -326,7 +326,10 @@ class LoginScreen extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 15.0),
             child: ElevatedButton(
               onPressed: () {
-                Get.to(() => const RegisterScreen());
+                Get.to(() => const RegisterScreen())!.then((value) {
+                  controller.emailLoginController.clear();
+                  controller.passwordLoginController.clear();
+                });
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFBF8E2C),

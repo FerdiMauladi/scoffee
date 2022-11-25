@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
@@ -6,6 +8,7 @@ import 'package:scoffee/data/model/coffee_model.dart';
 import 'package:scoffee/data/model/detail_coffee_model.dart';
 import 'package:scoffee/data/model/detail_discuss_model.dart';
 import 'package:scoffee/data/model/detail_event_model.dart';
+import 'package:scoffee/data/model/education_model.dart';
 import 'package:scoffee/data/model/event_model.dart';
 import 'package:scoffee/data/model/forum_model.dart';
 import 'package:scoffee/data/model/login_model.dart';
@@ -38,7 +41,7 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future register(
+  Future<Response> register(
       {required String email,
       required String password,
       required String name}) async {
@@ -111,12 +114,12 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<ForumModel?> getDataForum(int pageKey) async {
+  Future<ForumModel?> getDataForum(int pageKey, String category) async {
     var token = await storageSecure.read(key: "token");
     network.dio.options.headers['Authorization'] = 'Bearer $token';
     try {
       final response = await network.dio.get(
-        '/posting',
+        '/category/$category/relationships/posting',
         queryParameters: {
           "page": pageKey,
         },
@@ -145,7 +148,7 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<DetailCoffeeModel?> getDetailCoffee(String id) async {
+  Future<DetailCoffeeModel?> getDetailCoffee(int id) async {
     var token = await storageSecure.read(key: "token");
     network.dio.options.headers['Authorization'] = 'Bearer $token';
     try {
@@ -158,7 +161,7 @@ class RepositoryImpl implements Repository {
 
   @override
   Future<Comments?> getDetailForum(
-      {required String id, required int pageKey}) async {
+      {required int id, required int pageKey}) async {
     var token = await storageSecure.read(key: "token");
     network.dio.options.headers['Authorization'] = 'Bearer $token';
     try {
@@ -175,7 +178,7 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<DetailDiscussModel?> getForum({required String id}) async {
+  Future<DetailDiscussModel?> getForum({required int id}) async {
     var token = await storageSecure.read(key: "token");
     network.dio.options.headers['Authorization'] = 'Bearer $token';
     try {
@@ -189,7 +192,7 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<DetailEventModel?> getDetailEvent(String id) async {
+  Future<DetailEventModel?> getDetailEvent(int id) async {
     var token = await storageSecure.read(key: "token");
     network.dio.options.headers['Authorization'] = 'Bearer $token';
     try {
@@ -201,7 +204,8 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<Response> postComment({required String idForum, required String comment}) async {
+  Future<Response> postComment(
+      {required int idForum, required String comment}) async {
     var token = await storageSecure.read(key: "token");
     network.dio.options.headers['Authorization'] = 'Bearer $token';
     try {
@@ -212,15 +216,59 @@ class RepositoryImpl implements Repository {
       final response = await network.dio.post(
         '/comment',
         data: formData,
-        options: Options(
-          headers: {
-            "Content-Type" : "multipart/form-data",
-          }
-        ),
+        options: Options(headers: {
+          "Content-Type": "multipart/form-data",
+        }),
       );
       return response;
     } on DioError catch (e) {
       throw Exception(e.message);
+    }
+  }
+
+  @override
+  Future<EducationModel?> getDataEducation(int pageKey, String category) async {
+    var token = await storageSecure.read(key: "token");
+    network.dio.options.headers['Authorization'] = 'Bearer $token';
+    try {
+      final response = await network.dio.get(
+        '/education',
+        queryParameters: {
+          "page": pageKey,
+          "category" : category,
+        },
+      );
+      return EducationModel.fromJson(response.data['data']);
+    } on DioError catch (e) {
+      throw Exception(e.message);
+    }
+  }
+
+  @override
+  Future<Response> postForum({required int categoryId, required String title, required String description, File? image}) async {
+    var token = await storageSecure.read(key: "token");
+    network.dio.options.headers['Authorization'] = 'Bearer $token';
+    try {
+      var formData = FormData.fromMap({
+        "category_id": categoryId,
+        "context_id": 1,
+        "title" : title,
+        "description" : description,
+      });
+
+      if (image != null) {
+        formData.files.addAll(
+            [MapEntry("image", await MultipartFile.fromFile(image.path))]);
+      }
+
+      var response = await network.dio.post("/posting",
+          data: formData,
+          options: Options(headers: {
+            "Content-Type": "multipart/form-data"
+          }));
+      return response;
+    } on DioError catch (e) {
+      throw Exception(e);
     }
   }
 }

@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scoffee/const/app_const.dart';
-import 'package:scoffee/screen/discuss/detail/detail_discuss_controller.dart';
-import 'package:scoffee/screen/discuss/home/discuss_screen.dart';
-
+import 'package:scoffee/screen/discussion/detail/detail_discuss_controller.dart';
+import 'package:scoffee/screen/discussion/discuss/discuss_screen.dart';
 import '../../../data/model/detail_discuss_model.dart';
 
 class DetailDiscussScreen extends StatelessWidget {
@@ -121,6 +120,7 @@ class DetailDiscussScreen extends StatelessWidget {
                                   const SizedBox(
                                     height: 25.0,
                                   ),
+                                  if (controller.detailForums.forums!.image != null)
                                   CachedNetworkImage(
                                     imageUrl: AppConst.baseImagePostingUrl +
                                         controller.detailForums.forums!.image!,
@@ -308,7 +308,8 @@ class DetailDiscussScreen extends StatelessWidget {
                                     .postComment(
                                         controller.detailForums.forums!.id!)
                                     .then((_) {
-                                  controller.pagingController.refresh();
+                                  controller.commentController.clear();
+                                    controller.pagingController.refresh();
                                   controller.update();
                                 });
                               },

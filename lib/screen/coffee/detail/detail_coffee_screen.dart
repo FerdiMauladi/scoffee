@@ -108,7 +108,7 @@ class DetailCoffeeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  controller.detailCoffee.story!.replaceAll('<p>', '').replaceAll('</p>', '') ?? 'error',
+                  controller.detailCoffee.description?.replaceAll('<p>', '').replaceAll('</p>', '') ?? 'error',
                   style: const TextStyle(
                     fontSize: 15.0,
                   ),

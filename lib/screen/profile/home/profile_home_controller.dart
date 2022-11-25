@@ -33,12 +33,10 @@ class ProfileController extends BaseController {
     changeState(ProfileViewState.loading);
     try {
       var data = await repository.getDataUser();
-      print(data!);
-      userModel = data;
+      userModel = data!;
       update();
       changeState(ProfileViewState.none);
     } catch (e) {
-      print(e);
       changeState(ProfileViewState.error);
     }
   }

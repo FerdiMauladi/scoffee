@@ -37,7 +37,7 @@ class UserDetail {
   String? born;
   String? academic;
   String? work;
-  String? userId;
+  int? userId;
   String? createdAt;
   String? updatedAt;
 

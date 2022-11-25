@@ -78,13 +78,13 @@ class ForumModel {
 }
 
 class Data {
-  String? forumId;
+  int? forumId;
   String? category;
   String? context;
   String? name;
   String? description;
   String? image;
-  String? totalComment;
+  int? totalComment;
 
   Data(
       {this.forumId,

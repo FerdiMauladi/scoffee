@@ -6,7 +6,7 @@ class DetailEventModel {
   String? slug;
   String? body;
   String? date;
-  String? statusPublish;
+  int? statusPublish;
   String? createdAt;
   String? updatedAt;
 

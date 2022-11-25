@@ -1,6 +1,6 @@
-class CoffeeModel {
+class EducationModel {
   int? currentPage;
-  List<Data>? data;
+  List<DataEdu>? data;
   String? firstPageUrl;
   int? from;
   int? lastPage;
@@ -13,7 +13,7 @@ class CoffeeModel {
   int? to;
   int? total;
 
-  CoffeeModel(
+  EducationModel(
       {this.currentPage,
         this.data,
         this.firstPageUrl,
@@ -28,12 +28,12 @@ class CoffeeModel {
         this.to,
         this.total});
 
-  CoffeeModel.fromJson(Map<String, dynamic> json) {
+  EducationModel.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <DataEdu>[];
       json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
+        data!.add(DataEdu.fromJson(v));
       });
     }
     firstPageUrl = json['first_page_url'];
@@ -77,33 +77,33 @@ class CoffeeModel {
   }
 }
 
-class Data {
+class DataEdu {
   int? id;
-  String? name;
-  String? slug;
+  String? author;
   String? image;
-  String? description;
-  String? story;
+  String? title;
+  String? slug;
+  String? body;
   String? createdAt;
   String? updatedAt;
 
-  Data(
+  DataEdu(
       {this.id,
-        this.name,
-        this.slug,
+        this.author,
         this.image,
-        this.description,
-        this.story,
+        this.title,
+        this.slug,
+        this.body,
         this.createdAt,
         this.updatedAt});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  DataEdu.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
-    slug = json['slug'];
+    author = json['author'];
     image = json['image'];
-    description = json['description'];
-    story = json['story'];
+    title = json['title'];
+    slug = json['slug'];
+    body = json['body'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -111,11 +111,11 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['name'] = name;
-    data['slug'] = slug;
+    data['author'] = author;
     data['image'] = image;
-    data['description'] = description;
-    data['story'] = story;
+    data['title'] = title;
+    data['slug'] = slug;
+    data['body'] = body;
     data['created_at'] = createdAt;
     data['updated_at'] = updatedAt;
     return data;

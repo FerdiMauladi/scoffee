@@ -78,14 +78,14 @@ class EventModel {
 }
 
 class Data {
-  String? id;
+  int? id;
   String? author;
   String? image;
   String? title;
   String? slug;
   String? body;
   String? date;
-  String? statusPublish;
+  int? statusPublish;
   String? createdAt;
   String? updatedAt;
 

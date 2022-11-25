@@ -25,7 +25,7 @@ class DetailDiscussModel {
 }
 
 class Forums {
-  String? id;
+  int? id;
   String? user;
   String? category;
   String? context;
@@ -145,7 +145,7 @@ class Comments {
 }
 
 class Data {
-  String? id;
+  int? id;
   String? user;
   String? content;
   String? createdAt;

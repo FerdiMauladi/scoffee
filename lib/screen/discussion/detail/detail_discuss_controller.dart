@@ -51,6 +51,7 @@ class DetailDiscussController extends BaseController {
       detailForums = detailComment!;
       changeState(DetailDiscussViewState.none);
     } catch (e) {
+      print(e);
       changeState(DetailDiscussViewState.error);
     }
   }
@@ -69,11 +70,12 @@ class DetailDiscussController extends BaseController {
         pagingController.appendPage(newItems.data!, nextPageKey);
       }
     } catch (error) {
+      print(error);
       pagingController.error = error;
     }
   }
 
-  Future postComment(String forumId) async {
+  Future postComment(int forumId) async {
     try {
       var response = await repository.postComment(
         idForum: forumId,

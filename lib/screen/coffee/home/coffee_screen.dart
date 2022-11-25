@@ -15,6 +15,17 @@ class CoffeeScreen extends StatelessWidget {
     return GetBuilder<CoffeeController>(
       init: CoffeeController(),
       builder: (controller) {
+        if (controller.state == CoffeeViewState.loading) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: Container(
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator(
+                color: Color(0xFF362204),
+              ),
+            ),
+          );
+        }
         return Scaffold(
           backgroundColor: Colors.white,
           // appBar: AppBar(
@@ -37,21 +48,40 @@ class CoffeeScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Hallo, Ferdi',
-                        style: TextStyle(
-                          color: const Color(0xFF674109),
-                          fontSize: 24,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        'Semoga harimu menyenangkan...',
-                        style: TextStyle(
-                          color: const Color(0xFF674109),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Hallo, ${controller.userModel.name}',
+                                style: TextStyle(
+                                  color: const Color(0xFF674109),
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                'Semoga harimu menyenangkan...',
+                                style: TextStyle(
+                                  color: const Color(0xFF674109),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            width: 80,
+                            height: 80,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('assets/icon/coffee.png'),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 25,
