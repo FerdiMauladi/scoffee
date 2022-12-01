@@ -233,7 +233,6 @@ class ProfileUpdateScreen extends StatelessWidget {
                                   final form =
                                       controller.formKeyUpdate.currentState;
                                   if (form!.validate()) {
-
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

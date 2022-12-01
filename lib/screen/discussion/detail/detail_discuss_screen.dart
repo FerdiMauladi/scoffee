@@ -14,6 +14,9 @@ class DetailDiscussScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<DetailDiscussController>(
       init: DetailDiscussController(),
+      didChangeDependencies: (state) {
+        state.controller!.pagingController.refresh();
+      },
       builder: (controller) {
         if (controller.state == DetailDiscussViewState.loading) {
           return Scaffold(
@@ -72,28 +75,116 @@ class DetailDiscussScreen extends StatelessWidget {
           body: Column(
             children: [
               Expanded(
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Container(
-                        margin: const EdgeInsets.only(
-                          bottom: 25.0,
-                        ),
-                        decoration: const BoxDecoration(
-                            border: Border(
-                          bottom: BorderSide(
-                            width: 1,
-                            color: Colors.grey,
+                child: RefreshIndicator(
+                  onRefresh: () => Future.sync(
+                    () => controller.pagingController.refresh(),
+                  ),
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                            bottom: 25.0,
                           ),
-                        )),
-                        child: Column(
-                          children: [
-                            Container(
-                              color: Colors.white,
-                              margin: const EdgeInsets.all(12.0),
+                          decoration: const BoxDecoration(
+                              border: Border(
+                            bottom: BorderSide(
+                              width: 1,
+                              color: Colors.grey,
+                            ),
+                          )),
+                          child: Column(
+                            children: [
+                              Container(
+                                color: Colors.white,
+                                margin: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundColor:
+                                              const Color(0xFF362204),
+                                          foregroundColor: Colors.white,
+                                          backgroundImage: AssetImage(
+                                            'assets/images/profile/profile.png',
+                                          ),
+                                          radius: 25,
+                                        ),
+                                        const SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        Text(
+                                          controller.detailForums.forums!.user!,
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 25.0,
+                                    ),
+                                    if (controller.detailForums.forums!.image !=
+                                        null)
+                                      CachedNetworkImage(
+                                        imageUrl: AppConst.baseImagePostingUrl +
+                                            controller
+                                                .detailForums.forums!.image!,
+                                        width: Get.width,
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) {
+                                          return const SizedBox.shrink();
+                                        },
+                                      ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            margin: const EdgeInsets.only(
+                                              top: 15.0,
+                                            ),
+                                            child: Text(
+                                              controller.detailForums.forums!
+                                                  .description!,
+                                              style: const TextStyle(
+                                                fontSize: 16.0,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20.0,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      PagedSliverList<int, Data?>(
+                        pagingController: controller.pagingController,
+                        builderDelegate: PagedChildBuilderDelegate<Data?>(
+                          itemBuilder: (context, item, index) {
+                            var width = Get.width;
+                            return Container(
+                              padding:
+                                  const EdgeInsets.only(left: 8.0, right: 8.0),
+                              margin: const EdgeInsets.only(bottom: 20.0),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       CircleAvatar(
                                         backgroundColor:
@@ -102,129 +193,51 @@ class DetailDiscussScreen extends StatelessWidget {
                                         backgroundImage: AssetImage(
                                           'assets/images/profile/profile.png',
                                         ),
-                                        radius: 25,
+                                        radius: 15,
                                       ),
-                                      const SizedBox(
+                                      SizedBox(
                                         width: 10.0,
                                       ),
-                                      Text(
-                                        controller.detailForums.forums!.user!,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 25.0,
-                                  ),
-                                  if (controller.detailForums.forums!.image != null)
-                                  CachedNetworkImage(
-                                    imageUrl: AppConst.baseImagePostingUrl +
-                                        controller.detailForums.forums!.image!,
-                                    width: Get.width,
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, url, error) {
-                                      return const SizedBox.shrink();
-                                    },
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
                                       Expanded(
-                                        child: Container(
-                                          margin: const EdgeInsets.only(
-                                            top: 15.0,
-                                          ),
-                                          child: Text(
-                                            controller.detailForums.forums!
-                                                .description!,
-                                            style: const TextStyle(
-                                              fontSize: 16.0,
-                                              color: Colors.black,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              item?.user ?? '-',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center,
                                             ),
-                                          ),
+                                            const SizedBox(
+                                              width: 10.0,
+                                            ),
+                                            Text(
+                                              item?.content ?? '-',
+                                              style: const TextStyle(
+                                                fontSize: 15.0,
+                                                color: Colors.black,
+                                              ),
+                                              maxLines: 5,
+                                              overflow: TextOverflow.fade,
+                                              textAlign: TextAlign.start,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
-                            ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       ),
-                    ),
-                    PagedSliverList<int, Data?>(
-                      pagingController: controller.pagingController,
-                      builderDelegate: PagedChildBuilderDelegate<Data?>(
-                        itemBuilder: (context, item, index) {
-                          var width = Get.width;
-                          return Container(
-                            padding:
-                                const EdgeInsets.only(left: 8.0, right: 8.0),
-                            margin: const EdgeInsets.only(bottom: 20.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: const Color(0xFF362204),
-                                      foregroundColor: Colors.white,
-                                      backgroundImage: AssetImage(
-                                        'assets/images/profile/profile.png',
-                                      ),
-                                      radius: 15,
-                                    ),
-                                    SizedBox(
-                                      width: 10.0,
-                                    ),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            item?.user ?? '-',
-                                            style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          const SizedBox(
-                                            width: 10.0,
-                                          ),
-                                          Text(
-                                            item?.content ?? '-',
-                                            style: const TextStyle(
-                                              fontSize: 15.0,
-                                              color: Colors.black,
-                                            ),
-                                            maxLines: 5,
-                                            overflow: TextOverflow.fade,
-                                            textAlign: TextAlign.start,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Container(
@@ -309,7 +322,7 @@ class DetailDiscussScreen extends StatelessWidget {
                                         controller.detailForums.forums!.id!)
                                     .then((_) {
                                   controller.commentController.clear();
-                                    controller.pagingController.refresh();
+                                  controller.pagingController.refresh();
                                   controller.update();
                                 });
                               },
