@@ -5,6 +5,7 @@ import 'package:scoffee/data/model/category_model.dart';
 import 'package:scoffee/data/model/coffee_model.dart';
 import 'package:scoffee/data/model/detail_coffee_model.dart';
 import 'package:scoffee/data/model/detail_discuss_model.dart';
+import 'package:scoffee/data/model/detail_education_model.dart';
 import 'package:scoffee/data/model/detail_event_model.dart';
 import 'package:scoffee/data/model/education_model.dart';
 import 'package:scoffee/data/model/event_model.dart';
@@ -39,6 +40,7 @@ abstract class Repository {
   Future<ForumModel?> getDataForum(int pageKey, String category);
 
   Future<EducationModel?> getDataEducation(int pageKey, String category);
+  Future<DetailEducationModel?> getDetailEducation(int id);
 
   Future<Comments?> getDetailForum({required int id, required int pageKey});
 
@@ -55,4 +57,6 @@ abstract class Repository {
     required String description,
     File? image,
   });
+
+  Future<Response> postProfile();
 }

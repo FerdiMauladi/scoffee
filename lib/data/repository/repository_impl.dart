@@ -7,6 +7,7 @@ import 'package:scoffee/data/model/category_model.dart';
 import 'package:scoffee/data/model/coffee_model.dart';
 import 'package:scoffee/data/model/detail_coffee_model.dart';
 import 'package:scoffee/data/model/detail_discuss_model.dart';
+import 'package:scoffee/data/model/detail_education_model.dart';
 import 'package:scoffee/data/model/detail_event_model.dart';
 import 'package:scoffee/data/model/education_model.dart';
 import 'package:scoffee/data/model/event_model.dart';
@@ -270,5 +271,23 @@ class RepositoryImpl implements Repository {
     } on DioError catch (e) {
       throw Exception(e);
     }
+  }
+
+  @override
+  Future<DetailEducationModel?> getDetailEducation(int id) async {
+    var token = await storageSecure.read(key: "token");
+    network.dio.options.headers['Authorization'] = 'Bearer $token';
+    try {
+      final response = await network.dio.get('/education/$id');
+      return DetailEducationModel.fromJson(response.data['data']);
+    } on DioError catch (e) {
+      throw Exception(e.message);
+    }
+  }
+
+  @override
+  Future<Response> postProfile() {
+    // TODO: implement postProfile
+    throw UnimplementedError();
   }
 }
