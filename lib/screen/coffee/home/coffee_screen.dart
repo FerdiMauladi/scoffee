@@ -90,89 +90,94 @@ class CoffeeScreen extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: CustomScrollView(
-                    slivers: [
-                      PagedSliverGrid<int, Data?>(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 1,
-                          crossAxisSpacing: 10,
-                          childAspectRatio: 3 / 2,
-                        ),
-                        pagingController: controller.pagingController,
-                        builderDelegate: PagedChildBuilderDelegate<Data?>(
-                          itemBuilder: (context, item, index) {
-                            var width = Get.width;
-                            var height = Get.height;
-                            return Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Get.to(
-                                    () => const DetailCoffeeScreen(),
-                                    arguments: {
-                                      'id': item.id,
-                                    },
-                                  );
-                                },
-                                child: Stack(
-                                  children: [
-                                    SizedBox(
-                                      width: width,
-                                      height: height * 0.4,
-                                    ),
-                                    Positioned(
-                                      top: 0,
-                                      bottom: 0,
-                                      left: 0,
-                                      right: 0,
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        width: width * 0.8,
+                  child: RefreshIndicator(
+                    onRefresh: () => Future.sync(
+                      () => controller.pagingController.refresh(),
+                    ),
+                    child: CustomScrollView(
+                      slivers: [
+                        PagedSliverGrid<int, Data?>(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 1,
+                            crossAxisSpacing: 10,
+                            childAspectRatio: 3 / 2,
+                          ),
+                          pagingController: controller.pagingController,
+                          builderDelegate: PagedChildBuilderDelegate<Data?>(
+                            itemBuilder: (context, item, index) {
+                              var width = Get.width;
+                              var height = Get.height;
+                              return Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Get.to(
+                                      () => const DetailCoffeeScreen(),
+                                      arguments: {
+                                        'id': item.id,
+                                      },
+                                    );
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      SizedBox(
+                                        width: width,
                                         height: height * 0.4,
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            image: DecorationImage(
-                                              image: NetworkImage(
-                                                  AppConst.baseImageCoffeeUrl +
-                                                      item!.image!),
-                                              fit: BoxFit.cover,
-                                            )),
                                       ),
-                                    ),
-                                    Positioned(
-                                      bottom: 10,
-                                      left: 0,
-                                      right: 0,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          item.name!,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 24,
-                                            shadows: <Shadow>[
-                                              Shadow(
-                                                offset: Offset(4.0, 4.0),
-                                                blurRadius: 8.0,
-                                                color: Colors.black,
-                                              ),
-                                            ],
+                                      Positioned(
+                                        top: 0,
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          width: width * 0.8,
+                                          height: height * 0.4,
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              image: DecorationImage(
+                                                image: NetworkImage(AppConst
+                                                        .baseImageCoffeeUrl +
+                                                    item!.image!),
+                                                fit: BoxFit.cover,
+                                              )),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        bottom: 10,
+                                        left: 0,
+                                        right: 0,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            item.name!,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 24,
+                                              shadows: <Shadow>[
+                                                Shadow(
+                                                  offset: Offset(4.0, 4.0),
+                                                  blurRadius: 8.0,
+                                                  color: Colors.black,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],

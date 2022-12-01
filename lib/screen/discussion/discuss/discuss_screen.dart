@@ -18,7 +18,6 @@ class DiscussScreen extends StatelessWidget {
     return GetBuilder<DiscussController>(
       init: DiscussController(),
       builder: (controller) {
-        print(controller.categoryTerm);
         if (controller.state == DiscussViewState.loading) {
           return Scaffold(
             backgroundColor: Colors.white,
@@ -46,7 +45,7 @@ class DiscussScreen extends StatelessWidget {
           body: SafeArea(
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 20.0,
                 ),
                 Row(
@@ -230,195 +229,209 @@ class DiscussScreen extends StatelessWidget {
                 ),
                 if (controller.isDiscuss == true)
                   Expanded(
-                    child: CustomScrollView(
-                      slivers: [
-                        PagedSliverList<int, Data?>(
-                          pagingController: controller.pagingController,
-                          builderDelegate: PagedChildBuilderDelegate<Data?>(
-                            itemBuilder: (context, item, index) {
-                              var width = Get.width;
-                              return GestureDetector(
-                                onTap: () {
-                                  Get.to(
-                                    () => const DetailDiscussScreen(),
-                                    arguments: {
-                                      'id': item.forumId,
-                                    },
-                                  )!
-                                      .then((_) => controller.pagingController
-                                          .refresh());
-                                },
-                                child: Container(
-                                  color: Colors.white,
-                                  margin: const EdgeInsets.all(12.0),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          CircleAvatar(
-                                            backgroundColor:
-                                                const Color(0xFF362204),
-                                            foregroundColor: Colors.white,
-                                            backgroundImage: AssetImage(
-                                              'assets/images/profile/profile.png',
-                                            ),
-                                            radius: 25,
-                                          ),
-                                          const SizedBox(
-                                            width: 10.0,
-                                          ),
-                                          Text(
-                                            item?.name ?? '-',
-                                            style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 25.0,
-                                      ),
-                                      if (item!.image != null)
-                                        CachedNetworkImage(
-                                          imageUrl:
-                                              AppConst.baseImagePostingUrl +
-                                                  item.image!,
-                                          width: width,
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) {
-                                            return const SizedBox.shrink();
-                                          },
-                                        ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                top: 15.0,
+                    child: RefreshIndicator(
+                      onRefresh: () => Future.sync(
+                        () => controller.pagingController.refresh(),
+                      ),
+                      child: CustomScrollView(
+                        slivers: [
+                          PagedSliverList<int, Data?>(
+                            pagingController: controller.pagingController,
+                            builderDelegate: PagedChildBuilderDelegate<Data?>(
+                              itemBuilder: (context, item, index) {
+                                var width = Get.width;
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(
+                                      () => const DetailDiscussScreen(),
+                                      arguments: {
+                                        'id': item.forumId,
+                                      },
+                                    )!
+                                        .then((_) => controller.pagingController
+                                            .refresh());
+                                  },
+                                  child: Container(
+                                    color: Colors.white,
+                                    margin: const EdgeInsets.all(12.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            CircleAvatar(
+                                              backgroundColor:
+                                                  const Color(0xFF362204),
+                                              foregroundColor: Colors.white,
+                                              backgroundImage: AssetImage(
+                                                'assets/images/profile/profile.png',
                                               ),
-                                              child: Text(
-                                                item.description!,
-                                                style: const TextStyle(
-                                                  fontSize: 16.0,
-                                                  color: Colors.black,
+                                              radius: 25,
+                                            ),
+                                            const SizedBox(
+                                              width: 10.0,
+                                            ),
+                                            Text(
+                                              item?.name ?? '-',
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 25.0,
+                                        ),
+                                        if (item!.image != null)
+                                          CachedNetworkImage(
+                                            imageUrl:
+                                                AppConst.baseImagePostingUrl +
+                                                    item.image!,
+                                            width: width,
+                                            fit: BoxFit.cover,
+                                            errorWidget: (context, url, error) {
+                                              return const SizedBox.shrink();
+                                            },
+                                          ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Container(
+                                                margin: const EdgeInsets.only(
+                                                  top: 15.0,
                                                 ),
-                                                textAlign: TextAlign.start,
+                                                child: Text(
+                                                  item.description!,
+                                                  style: const TextStyle(
+                                                    fontSize: 16.0,
+                                                    color: Colors.black,
+                                                  ),
+                                                  textAlign: TextAlign.start,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                          top: 10.0,
-                                          bottom: 10.0,
+                                          ],
                                         ),
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Lihat ${item.totalComment} Komentar",
-                                          style: const TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.grey,
+                                        Container(
+                                          margin: const EdgeInsets.only(
+                                            top: 10.0,
+                                            bottom: 10.0,
+                                          ),
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Lihat ${item.totalComment} Komentar",
+                                            style: const TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.grey,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 if (controller.isDiscuss == false)
                   Expanded(
-                    child: CustomScrollView(
-                      slivers: [
-                        PagedSliverList<int, DataEdu?>(
-                          pagingController: controller.pagingControllerEdu,
-                          builderDelegate: PagedChildBuilderDelegate<DataEdu?>(
-                            itemBuilder: (context, item, index) {
-                              var width = Get.width;
-                              return Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: GestureDetector(
-                                  onTap: () {},
-                                  child: Card(
-                                    elevation: 8,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(8.0),
-                                      ),
-                                      side: BorderSide(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        CachedNetworkImage(
-                                          imageUrl:
-                                              AppConst.baseImageEducationUrl +
-                                                  item!.image!,
-                                          width: width,
-                                          height: 180,
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) {
-                                            return const SizedBox.shrink();
-                                          },
+                    child: RefreshIndicator(
+                      onRefresh: () => Future.sync(
+                        () => controller.pagingControllerEdu.refresh(),
+                      ),
+                      child: CustomScrollView(
+                        slivers: [
+                          PagedSliverList<int, DataEdu?>(
+                            pagingController: controller.pagingControllerEdu,
+                            builderDelegate:
+                                PagedChildBuilderDelegate<DataEdu?>(
+                              itemBuilder: (context, item, index) {
+                                var width = Get.width;
+                                return Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: GestureDetector(
+                                    onTap: () {},
+                                    child: Card(
+                                      elevation: 8,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0),
                                         ),
-                                        Container(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: Column(
-                                            children: [
-                                              Container(
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                  item.title ?? '-',
-                                                  style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 18.0,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                alignment: Alignment.centerLeft,
-                                                margin: const EdgeInsets.only(
-                                                    top: 8.0),
-                                                child: Text(
-                                                  item.body
-                                                          ?.replaceAll(
-                                                              '<p>', '')
-                                                          .replaceAll(
-                                                              '</p>', '') ??
-                                                      '-',
-                                                  style: const TextStyle(
-                                                    fontSize: 14.0,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ],
+                                        side: BorderSide(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          CachedNetworkImage(
+                                            imageUrl:
+                                                AppConst.baseImageEducationUrl +
+                                                    item!.image!,
+                                            width: width,
+                                            height: 180,
+                                            fit: BoxFit.cover,
+                                            errorWidget: (context, url, error) {
+                                              return const SizedBox.shrink();
+                                            },
                                           ),
-                                        )
-                                      ],
+                                          Container(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    item.title ?? '-',
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 18.0,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  margin: const EdgeInsets.only(
+                                                      top: 8.0),
+                                                  child: Text(
+                                                    item.body
+                                                            ?.replaceAll(
+                                                                '<p>', '')
+                                                            .replaceAll(
+                                                                '</p>', '') ??
+                                                        '-',
+                                                    style: const TextStyle(
+                                                      fontSize: 14.0,
+                                                      color: Colors.grey,
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
               ],
