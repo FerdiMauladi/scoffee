@@ -1,12 +1,14 @@
 class DetailDiscussModel {
   Forums? forums;
+  int? totalLikes;
   Comments? comments;
 
-  DetailDiscussModel({this.forums, this.comments});
+  DetailDiscussModel({this.forums, this.totalLikes, this.comments});
 
   DetailDiscussModel.fromJson(Map<String, dynamic> json) {
     forums =
     json['forums'] != null ? Forums.fromJson(json['forums']) : null;
+    totalLikes = json['total_likes'];
     comments = json['comments'] != null
         ? Comments.fromJson(json['comments'])
         : null;
@@ -17,6 +19,7 @@ class DetailDiscussModel {
     if (forums != null) {
       data['forums'] = forums!.toJson();
     }
+    data['total_likes'] = totalLikes;
     if (comments != null) {
       data['comments'] = comments!.toJson();
     }
@@ -26,28 +29,31 @@ class DetailDiscussModel {
 
 class Forums {
   int? id;
+  int? userId;
+  String? userImage;
   String? user;
   String? category;
   String? context;
-  String? title;
   String? description;
   String? image;
 
   Forums(
       {this.id,
+        this.userId,
+        this.userImage,
         this.user,
         this.category,
         this.context,
-        this.title,
         this.description,
         this.image});
 
   Forums.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    userId = json['user_id'];
+    userImage = json['user_image'];
     user = json['user'];
     category = json['category'];
     context = json['context'];
-    title = json['title'];
     description = json['description'];
     image = json['image'];
   }
@@ -55,10 +61,11 @@ class Forums {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
+    data['user_id'] = userId;
+    data['user_image'] = userImage;
     data['user'] = user;
     data['category'] = category;
     data['context'] = context;
-    data['title'] = title;
     data['description'] = description;
     data['image'] = image;
     return data;
@@ -146,14 +153,16 @@ class Comments {
 
 class Data {
   int? id;
+  String? userImage;
   String? user;
   String? content;
   String? createdAt;
 
-  Data({this.id, this.user, this.content, this.createdAt});
+  Data({this.id, this.userImage, this.user, this.content, this.createdAt});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    userImage = json['user_image'];
     user = json['user'];
     content = json['content'];
     createdAt = json['created_at'];
@@ -162,6 +171,7 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
+    data['user_image'] = userImage;
     data['user'] = user;
     data['content'] = content;
     data['created_at'] = createdAt;

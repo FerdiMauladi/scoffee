@@ -15,7 +15,6 @@ class AppConst {
 
   static const listCategoryStatis = [
     "Kopi Asik",
-    "Sumedang Coffee",
     "Pejuang Coffee",
     "Benih Coffee",
   ];

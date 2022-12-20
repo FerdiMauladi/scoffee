@@ -31,7 +31,7 @@ abstract class Repository {
 
   Future<DetailEventModel?> getDetailEvent(int id);
 
-  Future<UserModel?> getDataUser();
+  Future<UserModel?> getDataUser(int id);
 
   Future<CoffeeModel?> getDataCoffee(int pageKey);
 
@@ -39,7 +39,10 @@ abstract class Repository {
 
   Future<ForumModel?> getDataForum(int pageKey, String category);
 
+  Future<ForumModel?> getDataUserForum(int pageKey);
+
   Future<EducationModel?> getDataEducation(int pageKey, String category);
+
   Future<DetailEducationModel?> getDetailEducation(int id);
 
   Future<Comments?> getDetailForum({required int id, required int pageKey});
@@ -48,8 +51,7 @@ abstract class Repository {
 
   Future<List<CategoryModel?>> getDataCategory();
 
-  Future<Response> postComment(
-      {required int idForum, required String comment});
+  Future<Response> postComment({required int idForum, required String comment});
 
   Future<Response> postForum({
     required int categoryId,
@@ -58,5 +60,23 @@ abstract class Repository {
     File? image,
   });
 
-  Future<Response> postProfile();
+  Future<Response> postUpdateForum({
+    required int categoryId,
+    required String title,
+    required String description,
+    File? image,
+  });
+
+  Future<Response> postLike(int idForum);
+  Future<Response> postDelete(int idForum);
+
+  Future<Response> postProfile({
+    required String name,
+    required String email,
+    required String description,
+    required String born,
+    required String academic,
+    required String work,
+    File? image,
+  });
 }

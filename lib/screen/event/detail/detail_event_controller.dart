@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart';
 import 'package:scoffee/base/base_controller.dart';
 import 'package:scoffee/data/model/detail_event_model.dart';
@@ -34,9 +33,7 @@ class DetailEventController extends BaseController {
       update();
       changeState(DetailEventState.none);
     } catch (e) {
-      print(e);
       changeState(DetailEventState.error);
     }
   }
-
 }

@@ -6,6 +6,7 @@ import 'package:scoffee/const/app_const.dart';
 import 'package:scoffee/data/model/education_model.dart';
 import 'package:scoffee/screen/discussion/add/add_discuss_screen.dart';
 import 'package:scoffee/screen/discussion/detail/detail_discuss_screen.dart';
+import 'package:scoffee/screen/discussion/detail/education/detail_education_screen.dart';
 import 'package:scoffee/screen/discussion/discuss/discuss_controller.dart';
 
 import '../../../data/model/forum_model.dart';
@@ -235,8 +236,10 @@ class DiscussScreen extends StatelessWidget {
                       ),
                       child: CustomScrollView(
                         slivers: [
-                          PagedSliverList<int, Data?>(
+                          PagedSliverList<int, Data?>.separated(
                             pagingController: controller.pagingController,
+                            separatorBuilder: (context, index) =>
+                                const Divider(thickness: 2),
                             builderDelegate: PagedChildBuilderDelegate<Data?>(
                               itemBuilder: (context, item, index) {
                                 var width = Get.width;
@@ -251,6 +254,9 @@ class DiscussScreen extends StatelessWidget {
                                         .then((_) => controller.pagingController
                                             .refresh());
                                   },
+                                  onDoubleTap: () {
+                                    controller.postLike(item.forumId!);
+                                  },
                                   child: Container(
                                     color: Colors.white,
                                     margin: const EdgeInsets.all(12.0),
@@ -258,14 +264,26 @@ class DiscussScreen extends StatelessWidget {
                                       children: [
                                         Row(
                                           children: [
-                                            CircleAvatar(
+                                            item!.userImage !=
+                                                null
+                                                ? CircleAvatar(
                                               backgroundColor:
-                                                  const Color(0xFF362204),
+                                              const Color(0xFF362204),
+                                              foregroundColor: Colors.white,
+                                              backgroundImage: NetworkImage(
+                                                AppConst.baseImageProfileUrl +
+                                                    item.userImage!,
+                                              ),
+                                              maxRadius: 25,
+                                            )
+                                                : const CircleAvatar(
+                                              backgroundColor:
+                                              Color(0xFF362204),
                                               foregroundColor: Colors.white,
                                               backgroundImage: AssetImage(
                                                 'assets/images/profile/profile.png',
                                               ),
-                                              radius: 25,
+                                              maxRadius: 25,
                                             ),
                                             const SizedBox(
                                               width: 10.0,
@@ -289,6 +307,7 @@ class DiscussScreen extends StatelessWidget {
                                                 AppConst.baseImagePostingUrl +
                                                     item.image!,
                                             width: width,
+                                            height: 350,
                                             fit: BoxFit.cover,
                                             errorWidget: (context, url, error) {
                                               return const SizedBox.shrink();
@@ -321,12 +340,38 @@ class DiscussScreen extends StatelessWidget {
                                             bottom: 10.0,
                                           ),
                                           alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "Lihat ${item.totalComment} Komentar",
-                                            style: const TextStyle(
-                                              fontSize: 16.0,
-                                              color: Colors.grey,
-                                            ),
+                                          child: Row(
+                                            children: [
+                                              const Icon(
+                                                  Icons.mode_comment_outlined),
+                                              const SizedBox(
+                                                width: 5.0,
+                                              ),
+                                              Text(
+                                                "${item.totalComment}",
+                                                style: const TextStyle(
+                                                  fontSize: 16.0,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: 15.0,
+                                              ),
+                                              const Icon(
+                                                Icons.favorite_border_outlined,
+                                                color: Colors.red,
+                                              ),
+                                              const SizedBox(
+                                                width: 5.0,
+                                              ),
+                                              Text(
+                                                "${item.totalLike}",
+                                                style: const TextStyle(
+                                                  fontSize: 16.0,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
@@ -352,12 +397,20 @@ class DiscussScreen extends StatelessWidget {
                             pagingController: controller.pagingControllerEdu,
                             builderDelegate:
                                 PagedChildBuilderDelegate<DataEdu?>(
+                              animateTransitions: true,
                               itemBuilder: (context, item, index) {
                                 var width = Get.width;
                                 return Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      Get.to(
+                                        () => const DetailEducationScreen(),
+                                        arguments: {
+                                          'id': item.id,
+                                        },
+                                      );
+                                    },
                                     child: Card(
                                       elevation: 8,
                                       shape: const RoundedRectangleBorder(

@@ -2,6 +2,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scoffee/base/base_controller.dart';
 import 'package:scoffee/data/model/category_model.dart';
 import 'package:scoffee/data/model/education_model.dart';
+import 'package:scoffee/data/model/user_model.dart';
 
 import '../../../data/model/forum_model.dart';
 
@@ -16,6 +17,8 @@ class DiscussController extends BaseController {
   String categoryTerm = '';
   bool isDiscuss = true;
   int indexCategory = 1;
+  UserModel? userModel = UserModel();
+  int? userId;
   DiscussViewState _state = DiscussViewState.none;
 
   DiscussViewState get state => _state;
@@ -28,6 +31,7 @@ class DiscussController extends BaseController {
 
   @override
   void onInit() {
+    fetchCategory();
     pagingController.addPageRequestListener((pageKey) {
       fetchPage(pageKey);
     });
@@ -36,7 +40,6 @@ class DiscussController extends BaseController {
       fetchPage(pageKey);
     });
     pagingControllerEdu.refresh();
-    fetchCategory();
     super.onInit();
   }
 
@@ -57,7 +60,6 @@ class DiscussController extends BaseController {
           pagingController.appendPage(newItems.data!, nextPageKey);
         }
       } catch (e) {
-        print(e);
         pagingController.error = e;
       }
     }
@@ -74,9 +76,18 @@ class DiscussController extends BaseController {
           pagingControllerEdu.appendPage(newItems.data!, nextPageKey);
         }
       } catch (e) {
-        print(e);
         pagingControllerEdu.error = e;
       }
+    }
+  }
+
+  Future<void> postLike(int idForum) async {
+    try {
+      await repository
+          .postLike(idForum)
+          .then((value) => pagingController.refresh());
+    } catch (e) {
+      changeState(DiscussViewState.error);
     }
   }
 

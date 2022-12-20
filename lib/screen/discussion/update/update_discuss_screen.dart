@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:scoffee/screen/discussion/add/add_discuss_controller.dart';
-import 'package:scoffee/screen/register/register_controller.dart';
+import 'package:scoffee/screen/discussion/update/update_discuss_controller.dart';
 
-class AddDiscussScreen extends StatelessWidget {
-  const AddDiscussScreen({super.key});
+class UpdateDiscussScreen extends StatelessWidget {
+  const UpdateDiscussScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AddDiscussController>(
-      init: AddDiscussController(),
+    return GetBuilder<UpdateDiscussController>(
+      init: UpdateDiscussController(),
       builder: (controller) {
         return Scaffold(
           backgroundColor: Colors.white,
@@ -76,84 +75,91 @@ class AddDiscussScreen extends StatelessWidget {
                                       controller.pathFoto!,
                                       fit: BoxFit.fill,
                                     )
-                                  : const Center(
-                                      child: Text('Pilih Gambar'),
-                                    ),
+                                  : controller.detailForums.forums?.userImage !=
+                                          null
+                                      ? Image.network(
+                                          controller
+                                              .detailForums.forums!.userImage!,
+                                          fit: BoxFit.fill,
+                                        )
+                                      : const Center(
+                                          child: Text('Pilih Gambar'),
+                                        ),
                             ),
                           ),
                           const SizedBox(
                             height: 10,
                           ),
-                          const Text(
-                            'Title',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            child: TextFormField(
-                              cursorColor: Colors.black,
-                              controller: controller.titleController,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              validator: (name) {
-                                if (name == null || name.isEmpty) {
-                                  return 'Title cannot be empty';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              decoration: InputDecoration(
-                                hintText: 'Masukan judul forum',
-                                filled: true,
-                                fillColor: Colors.white,
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    10,
-                                  ),
-                                  borderSide: const BorderSide(
-                                    color: Colors.black,
-                                    width: 1,
-                                    style: BorderStyle.solid,
-                                  ),
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    10,
-                                  ),
-                                  borderSide: const BorderSide(
-                                    color: Colors.red,
-                                    width: 1,
-                                    style: BorderStyle.solid,
-                                  ),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    10,
-                                  ),
-                                  borderSide: const BorderSide(
-                                    color: Colors.black,
-                                    width: 5,
-                                    style: BorderStyle.solid,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    10,
-                                  ),
-                                  borderSide: const BorderSide(
-                                    color: Colors.black,
-                                    style: BorderStyle.solid,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15.0,
-                          ),
+                          // const Text(
+                          //   'Title',
+                          //   style: TextStyle(
+                          //     fontSize: 18,
+                          //     fontWeight: FontWeight.w500,
+                          //   ),
+                          // ),
+                          // Container(
+                          //   margin: const EdgeInsets.only(top: 10),
+                          //   child: TextFormField(
+                          //     cursorColor: Colors.black,
+                          //     controller: controller.titleController,
+                          //     autovalidateMode:
+                          //     AutovalidateMode.onUserInteraction,
+                          //     validator: (name) {
+                          //       if (name == null || name.isEmpty) {
+                          //         return 'Title cannot be empty';
+                          //       } else {
+                          //         return null;
+                          //       }
+                          //     },
+                          //     decoration: InputDecoration(
+                          //       hintText: 'Masukan judul forum',
+                          //       filled: true,
+                          //       fillColor: Colors.white,
+                          //       enabledBorder: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(
+                          //           10,
+                          //         ),
+                          //         borderSide: const BorderSide(
+                          //           color: Colors.black,
+                          //           width: 1,
+                          //           style: BorderStyle.solid,
+                          //         ),
+                          //       ),
+                          //       errorBorder: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(
+                          //           10,
+                          //         ),
+                          //         borderSide: const BorderSide(
+                          //           color: Colors.red,
+                          //           width: 1,
+                          //           style: BorderStyle.solid,
+                          //         ),
+                          //       ),
+                          //       border: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(
+                          //           10,
+                          //         ),
+                          //         borderSide: const BorderSide(
+                          //           color: Colors.black,
+                          //           width: 5,
+                          //           style: BorderStyle.solid,
+                          //         ),
+                          //       ),
+                          //       focusedBorder: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(
+                          //           10,
+                          //         ),
+                          //         borderSide: const BorderSide(
+                          //           color: Colors.black,
+                          //           style: BorderStyle.solid,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                          // const SizedBox(
+                          //   height: 15.0,
+                          // ),
                           const Text(
                             'Content',
                             style: TextStyle(

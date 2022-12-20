@@ -82,91 +82,154 @@ class DetailDiscussScreen extends StatelessWidget {
                   child: CustomScrollView(
                     slivers: [
                       SliverToBoxAdapter(
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                            bottom: 25.0,
-                          ),
-                          decoration: const BoxDecoration(
-                              border: Border(
-                            bottom: BorderSide(
-                              width: 1,
-                              color: Colors.grey,
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            controller
+                                .postLike(controller.detailForums.forums!.id!);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                              bottom: 25.0,
                             ),
-                          )),
-                          child: Column(
-                            children: [
-                              Container(
-                                color: Colors.white,
-                                margin: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundColor:
-                                              const Color(0xFF362204),
-                                          foregroundColor: Colors.white,
-                                          backgroundImage: AssetImage(
-                                            'assets/images/profile/profile.png',
+                            decoration: const BoxDecoration(
+                                border: Border(
+                              bottom: BorderSide(
+                                width: 1,
+                                color: Colors.grey,
+                              ),
+                            )),
+                            child: Column(
+                              children: [
+                                Container(
+                                  color: Colors.white,
+                                  margin: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          controller.detailForums.forums!
+                                                      .userImage !=
+                                                  null
+                                              ? CircleAvatar(
+                                                  backgroundColor:
+                                                      const Color(0xFF362204),
+                                                  foregroundColor: Colors.white,
+                                                  backgroundImage: NetworkImage(
+                                                    AppConst.baseImageProfileUrl +
+                                                        controller.detailForums
+                                                            .forums!.userImage!,
+                                                  ),
+                                                  maxRadius: 25,
+                                                )
+                                              : const CircleAvatar(
+                                                  backgroundColor:
+                                                      Color(0xFF362204),
+                                                  foregroundColor: Colors.white,
+                                                  backgroundImage: AssetImage(
+                                                    'assets/images/profile/profile.png',
+                                                  ),
+                                                  maxRadius: 25,
+                                                ),
+                                          const SizedBox(
+                                            width: 10.0,
                                           ),
-                                          radius: 25,
-                                        ),
-                                        const SizedBox(
-                                          width: 10.0,
-                                        ),
-                                        Text(
-                                          controller.detailForums.forums!.user!,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 25.0,
-                                    ),
-                                    if (controller.detailForums.forums!.image !=
-                                        null)
-                                      CachedNetworkImage(
-                                        imageUrl: AppConst.baseImagePostingUrl +
+                                          Text(
                                             controller
-                                                .detailForums.forums!.image!,
-                                        width: Get.width,
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, url, error) {
-                                          return const SizedBox.shrink();
-                                        },
-                                      ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            margin: const EdgeInsets.only(
-                                              top: 15.0,
+                                                .detailForums.forums!.user!,
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                            child: Text(
-                                              controller.detailForums.forums!
-                                                  .description!,
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 25.0,
+                                      ),
+                                      if (controller
+                                              .detailForums.forums!.image !=
+                                          null)
+                                        CachedNetworkImage(
+                                          imageUrl:
+                                              AppConst.baseImagePostingUrl +
+                                                  controller.detailForums
+                                                      .forums!.image!,
+                                          width: Get.width,
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) {
+                                            return const SizedBox.shrink();
+                                          },
+                                        ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              margin: const EdgeInsets.only(
+                                                top: 15.0,
+                                              ),
+                                              child: Text(
+                                                controller.detailForums.forums!
+                                                    .description!,
+                                                style: const TextStyle(
+                                                  fontSize: 16.0,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                          top: 10.0,
+                                          bottom: 10.0,
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                                Icons.mode_comment_outlined),
+                                            const SizedBox(
+                                              width: 5.0,
+                                            ),
+                                            Text(
+                                              "${controller.detailForums.comments!.total}",
                                               style: const TextStyle(
                                                 fontSize: 16.0,
                                                 color: Colors.black,
                                               ),
                                             ),
-                                          ),
+                                            const SizedBox(
+                                              width: 15.0,
+                                            ),
+                                            const Icon(
+                                              Icons.favorite_border_outlined,
+                                              color: Colors.red,
+                                            ),
+                                            const SizedBox(
+                                              width: 5.0,
+                                            ),
+                                            Text(
+                                              "${controller.detailForums.totalLikes}",
+                                              style: const TextStyle(
+                                                fontSize: 16.0,
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 20.0,
-                              ),
-                            ],
+                                const SizedBox(
+                                  height: 20.0,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -174,7 +237,6 @@ class DetailDiscussScreen extends StatelessWidget {
                         pagingController: controller.pagingController,
                         builderDelegate: PagedChildBuilderDelegate<Data?>(
                           itemBuilder: (context, item, index) {
-                            var width = Get.width;
                             return Container(
                               padding:
                                   const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -186,16 +248,28 @@ class DetailDiscussScreen extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      CircleAvatar(
+                                      item!.userImage !=
+                                          null
+                                          ? CircleAvatar(
                                         backgroundColor:
-                                            const Color(0xFF362204),
+                                        const Color(0xFF362204),
+                                        foregroundColor: Colors.white,
+                                        backgroundImage: NetworkImage(
+                                          AppConst.baseImageProfileUrl +
+                                              item.userImage!,
+                                        ),
+                                        maxRadius: 25,
+                                      )
+                                          : const CircleAvatar(
+                                        backgroundColor:
+                                        Color(0xFF362204),
                                         foregroundColor: Colors.white,
                                         backgroundImage: AssetImage(
                                           'assets/images/profile/profile.png',
                                         ),
-                                        radius: 15,
+                                        maxRadius: 25,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 10.0,
                                       ),
                                       Expanded(

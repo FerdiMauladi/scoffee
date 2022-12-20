@@ -1,15 +1,18 @@
 
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide BottomAppBar;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scoffee/base/base_controller.dart';
 import 'package:scoffee/data/model/user_model.dart';
+import 'package:scoffee/screen/bottomappbar/bottomappbar.dart';
 
 enum ProfileViewState {
   none,
   loading,
+  loadingStatus,
   error,
 }
 
@@ -25,6 +28,7 @@ class ProfileUpdateController extends BaseController {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final descriptionController = TextEditingController();
+  final bornController = TextEditingController();
   final lastEducationController = TextEditingController();
   final workController = TextEditingController();
 
@@ -65,9 +69,17 @@ class ProfileUpdateController extends BaseController {
 
   Future getUser() async {
     changeState(ProfileViewState.loading);
+    var id = await storageSecure.read(key: "id");
+    int ids = int.parse(id!);
     try {
-      var data = await repository.getDataUser();
+      var data = await repository.getDataUser(ids);
       userModel = data!;
+      nameController.text = userModel.name ?? '';
+      emailController.text = userModel.email ?? '';
+      descriptionController.text = userModel.userDetail?.description ?? '';
+      bornController.text = userModel.userDetail?.born ?? '';
+      lastEducationController.text = userModel.userDetail?.academic ?? '';
+      workController.text = userModel.userDetail?.work ?? '';
       update();
       changeState(ProfileViewState.none);
     } catch (e) {
@@ -75,5 +87,44 @@ class ProfileUpdateController extends BaseController {
     }
   }
 
-
+  Future updateUser() async {
+    changeState(ProfileViewState.loadingStatus);
+    try {
+      await repository
+          .postProfile(
+        name: nameController.text,
+        email: emailController.text,
+        description: descriptionController.text,
+        born: bornController.text,
+        academic: lastEducationController.text,
+        work: workController.text,
+        image: pathFoto,
+      )
+          .then(
+            (_) {
+              changeState(ProfileViewState.none);
+          Get.showSnackbar(
+            const GetSnackBar(
+              message: 'User berhasil di update',
+              isDismissible: true,
+              duration: Duration(seconds: 3),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Get.off(() => const BottomAppBar());
+        },
+      );
+    } catch (e) {
+      changeState(ProfileViewState.loading);
+      Get.showSnackbar(
+        const GetSnackBar(
+          message: 'Ada kesalahan saat ingin update user',
+          isDismissible: true,
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+  
 }

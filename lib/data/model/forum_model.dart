@@ -79,41 +79,53 @@ class ForumModel {
 
 class Data {
   int? forumId;
+  int? userId;
+  String? userImage;
   String? category;
   String? context;
   String? name;
   String? description;
   String? image;
   int? totalComment;
+  int? totalLike;
 
   Data(
       {this.forumId,
+        this.userId,
+        this.userImage,
         this.category,
         this.context,
         this.name,
         this.description,
         this.image,
-        this.totalComment});
+        this.totalComment,
+        this.totalLike});
 
   Data.fromJson(Map<String, dynamic> json) {
     forumId = json['forum_id'];
+    userId = json['user_id'];
+    userImage = json['user_image'];
     category = json['category'];
     context = json['context'];
     name = json['name'];
     description = json['description'];
     image = json['image'];
     totalComment = json['total_comment'];
+    totalLike = json['total_like'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['forum_id'] = forumId;
+    data['user_id'] = userId;
+    data['user_image'] = userImage;
     data['category'] = category;
     data['context'] = context;
     data['name'] = name;
     data['description'] = description;
     data['image'] = image;
     data['total_comment'] = totalComment;
+    data['total_like'] = totalLike;
     return data;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scoffee/base/base_controller.dart';
 import 'package:scoffee/data/model/user_model.dart';
@@ -12,6 +13,7 @@ enum CoffeeViewState {
 }
 
 class CoffeeController extends BaseController {
+  final storageSecure = const FlutterSecureStorage();
   UserModel userModel = UserModel();
   CoffeeViewState _state = CoffeeViewState.none;
   CoffeeViewState get state => _state;
@@ -39,8 +41,10 @@ class CoffeeController extends BaseController {
 
   Future getUser() async {
     changeState(CoffeeViewState.loading);
+    var id = await storageSecure.read(key: "id");
+    int ids = int.parse(id!);
     try {
-      var data = await repository.getDataUser();
+      var data = await repository.getDataUser(ids);
       userModel = data!;
       update();
       changeState(CoffeeViewState.none);

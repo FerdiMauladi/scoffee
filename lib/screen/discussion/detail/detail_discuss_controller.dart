@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scoffee/base/base_controller.dart';
 import 'package:scoffee/data/model/detail_discuss_model.dart';
+import 'package:scoffee/data/model/user_model.dart';
 
 enum DetailDiscussViewState {
   none,
@@ -44,6 +45,7 @@ class DetailDiscussController extends BaseController {
     update();
   }
 
+
   Future fetchData() async {
     changeState(DetailDiscussViewState.loading);
     try {
@@ -51,7 +53,6 @@ class DetailDiscussController extends BaseController {
       detailForums = detailComment!;
       changeState(DetailDiscussViewState.none);
     } catch (e) {
-      print(e);
       changeState(DetailDiscussViewState.error);
     }
   }
@@ -70,8 +71,18 @@ class DetailDiscussController extends BaseController {
         pagingController.appendPage(newItems.data!, nextPageKey);
       }
     } catch (error) {
-      print(error);
       pagingController.error = error;
+    }
+  }
+
+  Future<void> postLike(int idForum) async {
+    try {
+      await repository.postLike(idForum).then((value) {
+        fetchData();
+        pagingController.refresh();
+      });
+    } catch (e) {
+      changeState(DetailDiscussViewState.error);
     }
   }
 
@@ -82,7 +93,6 @@ class DetailDiscussController extends BaseController {
         comment: commentController.text,
       );
     } catch (e) {
-      print(e);
       return;
     }
   }

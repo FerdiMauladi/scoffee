@@ -1,8 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scoffee/const/app_const.dart';
+import 'package:scoffee/screen/discussion/detail/detail_discuss_screen.dart';
+import 'package:scoffee/screen/discussion/update/update_discuss_screen.dart';
 import 'package:scoffee/screen/profile/home/profile_home_controller.dart';
 import 'package:scoffee/screen/profile/update/profile_update_screen.dart';
+
+import '../../../data/model/forum_model.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -19,6 +25,15 @@ class ProfileScreen extends StatelessWidget {
               title: const Text(
                 'Profile',
                 style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              leading: GestureDetector(
+                onTap: () {
+                  Get.back();
+                },
+                child: const Icon(
+                  Icons.arrow_back_ios_new,
                   color: Colors.white,
                 ),
               ),
@@ -46,163 +61,160 @@ class ProfileScreen extends StatelessWidget {
           ),
           backgroundColor: Colors.white,
           body: SafeArea(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                      vertical: 30.0,
-                    ),
-                    width: 150,
-                    height: 150,
-                    alignment: Alignment.center,
-                    child: controller.userModel.userDetail!.image != null
-                        ? CircleAvatar(
-                            backgroundColor: const Color(0xFF362204),
-                            foregroundColor: Colors.white,
-                            backgroundImage: NetworkImage(
-                                AppConst.baseImageProfileUrl +
-                                    controller.userModel.userDetail!.image!),
-                            maxRadius: 80,
-                          )
-                        : const CircleAvatar(
-                            backgroundColor: Color(0xFF362204),
-                            foregroundColor: Colors.white,
-                            backgroundImage: AssetImage(
-                              'assets/images/profile/profile.png',
-                            ),
-                            maxRadius: 80,
-                          ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
+            child: RefreshIndicator(
+              onRefresh: () => Future.sync(() {
+                controller.pagingController.itemList!.clear();
+                controller.pagingController.refresh();
+                controller.getUser();
+              }),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Flexible(
                           flex: 1,
                           child: Container(
-                            alignment: Alignment.center,
-                            child: const Text(
-                              'Nama',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
-                              ),
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 10.0,
+                              vertical: 20.0,
                             ),
+                            width: 100,
+                            height: 100,
+                            alignment: Alignment.center,
+                            child: controller.userModel.userDetail!.image !=
+                                    null
+                                ? CircleAvatar(
+                                    backgroundColor: const Color(0xFF362204),
+                                    foregroundColor: Colors.white,
+                                    backgroundImage: NetworkImage(
+                                        AppConst.baseImageProfileUrl +
+                                            controller
+                                                .userModel.userDetail!.image!),
+                                    maxRadius: 80,
+                                  )
+                                : const CircleAvatar(
+                                    backgroundColor: Color(0xFF362204),
+                                    foregroundColor: Colors.white,
+                                    backgroundImage: AssetImage(
+                                      'assets/images/profile/profile.png',
+                                    ),
+                                    maxRadius: 80,
+                                  ),
                           ),
                         ),
                         Flexible(
-                          flex: 3,
+                          flex: 1,
                           child: Container(
-                            padding: const EdgeInsets.only(
-                              top: 8.0,
-                              bottom: 10.0,
-                              right: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 10.0,
+                              vertical: 20.0,
                             ),
-                            alignment: Alignment.centerLeft,
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey,
-                                  width: 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: Get.width * 0.3,
+                                  height: 40,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Get.to(
+                                        () => const ProfileUpdateScreen(),
+                                      )!
+                                          .then((_) {
+                                        controller.getUser();
+                                        controller.pagingController.refresh();
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFFBF8E2C),
+                                      textStyle: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      elevation: 2,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0),
+                                        ),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Update Profile',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            child: Text(
-                              controller.userModel.name ?? '-',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
+                                const SizedBox(
+                                  height: 15.0,
+                                ),
+                                SizedBox(
+                                  width: Get.width * 0.3,
+                                  height: 40,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      controller.logout();
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                      textStyle: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      elevation: 2,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0),
+                                        ),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'LOGOUT',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: const Text(
-                              'Email',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
-                              ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            controller.userModel.name ?? '-',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                        Flexible(
-                          flex: 3,
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                              top: 8.0,
-                              bottom: 10.0,
-                              right: 8.0,
-                            ),
-                            alignment: Alignment.centerLeft,
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey,
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                            child: Text(
-                              controller.userModel.email ?? '-',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
+                          Text(
+                            controller.userModel.email ?? '-',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: const Text(
-                              'Description',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
-                              ),
-                            ),
+                          const SizedBox(
+                            height: 15.0,
                           ),
-                        ),
-                        Flexible(
-                          flex: 3,
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                              top: 8.0,
-                              bottom: 10.0,
-                              right: 8.0,
-                            ),
-                            alignment: Alignment.centerLeft,
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey,
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                            child: Text(
+                          if (controller.userModel.userDetail?.description !=
+                              null)
+                            Text(
                               controller.userModel.userDetail?.description ??
                                   '-',
                               style: const TextStyle(
@@ -210,218 +222,235 @@ class ProfileScreen extends StatelessWidget {
                                 fontSize: 16,
                               ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: const Text(
-                              'Date Birth',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 3,
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                              top: 8.0,
-                              bottom: 10.0,
-                              right: 8.0,
-                            ),
-                            alignment: Alignment.centerLeft,
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey,
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                            child: Text(
-                              controller.userModel.userDetail?.born ?? '-',
+                          if (controller.userModel.userDetail?.born != null)
+                            Text(
+                              "Born ${controller.userModel.userDetail?.born}",
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
                               ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: const Text(
-                              'Last Education',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 3,
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                              top: 8.0,
-                              bottom: 10.0,
-                              right: 8.0,
-                            ),
-                            alignment: Alignment.centerLeft,
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey,
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                            child: Text(
-                              controller.userModel.userDetail?.academic ?? '-',
+                          if (controller.userModel.userDetail?.academic != null)
+                            Text(
+                              "Last Education ${controller.userModel.userDetail?.academic}",
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
                               ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: const Text(
-                              'Work',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 3,
-                          child: Container(
-                            padding: const EdgeInsets.only(
-                              top: 8.0,
-                              bottom: 10.0,
-                              right: 8.0,
-                            ),
-                            alignment: Alignment.centerLeft,
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey,
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                            child: Text(
-                              controller.userModel.userDetail?.work ?? '-',
+                          if (controller.userModel.userDetail?.work != null)
+                            Text(
+                              "Work in ${controller.userModel.userDetail?.work}",
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,
                               ),
                             ),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 25.0,
-                  ),
-                  SizedBox(
-                    width: Get.width * 0.8,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Get.to(
-                          () => const ProfileUpdateScreen(),
-                          arguments: {},
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFBF8E2C),
-                        textStyle: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        elevation: 2,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8.0),
+                    const SizedBox(
+                      height: 30.0,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 25.0, vertical: 8.0),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Color(0xFF362204),
+                            width: 4,
                           ),
                         ),
                       ),
                       child: const Text(
-                        'Update Profile',
+                        'My Posts',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
+                          fontSize: 22,
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 25.0,
-                  ),
-                  SizedBox(
-                    width: Get.width * 0.8,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        controller.logout();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        textStyle: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        elevation: 2,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8.0),
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        'LOGOUT',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
+                    const Divider(
+                      height: 0,
+                      thickness: 4,
+                    ),
+                    PagedListView<int, Data?>.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      pagingController: controller.pagingController,
+                      separatorBuilder: (context, index) =>
+                          const Divider(thickness: 2),
+                      builderDelegate: PagedChildBuilderDelegate<Data?>(
+                        itemBuilder: (context, item, index) {
+                          var width = Get.width;
+                          return GestureDetector(
+                            onTap: () {
+                              Get.to(
+                                () => const DetailDiscussScreen(),
+                                arguments: {
+                                  'id': item.forumId,
+                                },
+                              )!
+                                  .then((_) =>
+                                      controller.pagingController.refresh());
+                            },
+                            onDoubleTap: () {
+                              controller.postLike(item.forumId!);
+                            },
+                            child: Container(
+                              color: Colors.white,
+                              margin: const EdgeInsets.all(12.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      item!.userImage != null
+                                          ? CircleAvatar(
+                                              backgroundColor:
+                                                  const Color(0xFF362204),
+                                              foregroundColor: Colors.white,
+                                              backgroundImage: NetworkImage(
+                                                AppConst.baseImageProfileUrl +
+                                                    item.userImage!,
+                                              ),
+                                              maxRadius: 25,
+                                            )
+                                          : const CircleAvatar(
+                                              backgroundColor:
+                                                  Color(0xFF362204),
+                                              foregroundColor: Colors.white,
+                                              backgroundImage: AssetImage(
+                                                'assets/images/profile/profile.png',
+                                              ),
+                                              maxRadius: 25,
+                                            ),
+                                      const SizedBox(
+                                        width: 10.0,
+                                      ),
+                                      Text(
+                                        item.name ?? '-',
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      PopupMenuButton(
+                                        onSelected: (value) {
+                                          if (value == 'delete') {
+                                            controller
+                                                .postDelete(item.forumId!);
+                                          }
+                                          if (value == 'edit') {
+                                            Get.to(
+                                              () => const UpdateDiscussScreen(),
+                                              arguments: {
+                                                'id': item.forumId,
+                                              },
+                                            );
+                                          }
+                                        },
+                                        padding: EdgeInsets.zero,
+                                        position: PopupMenuPosition.under,
+                                        itemBuilder: (BuildContext bc) {
+                                          return const [
+                                            PopupMenuItem(
+                                              value: 'edit',
+                                              child: Text("Edit"),
+                                            ),
+                                            PopupMenuItem(
+                                              value: 'delete',
+                                              child: Text("Delete"),
+                                            ),
+                                          ];
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 25.0,
+                                  ),
+                                  if (item.image != null)
+                                    CachedNetworkImage(
+                                      imageUrl: AppConst.baseImagePostingUrl +
+                                          item.image!,
+                                      width: width,
+                                      height: 350,
+                                      fit: BoxFit.cover,
+                                      errorWidget: (context, url, error) {
+                                        return const SizedBox.shrink();
+                                      },
+                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          margin: const EdgeInsets.only(
+                                            top: 15.0,
+                                          ),
+                                          child: Text(
+                                            item.description!,
+                                            style: const TextStyle(
+                                              fontSize: 16.0,
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.start,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(
+                                      top: 10.0,
+                                      bottom: 10.0,
+                                    ),
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.mode_comment_outlined),
+                                        const SizedBox(
+                                          width: 5.0,
+                                        ),
+                                        Text(
+                                          "${item.totalComment}",
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 15.0,
+                                        ),
+                                        const Icon(
+                                          Icons.favorite_border_outlined,
+                                          color: Colors.red,
+                                        ),
+                                        const SizedBox(
+                                          width: 5.0,
+                                        ),
+                                        Text(
+                                          "${item.totalLike}",
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 25.0,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

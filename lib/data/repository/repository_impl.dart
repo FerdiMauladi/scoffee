@@ -84,13 +84,11 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<UserModel?> getDataUser() async {
+  Future<UserModel?> getDataUser(int id) async {
     var token = await storageSecure.read(key: "token");
-    var id = await storageSecure.read(key: "id");
-    int ids = int.parse(id!);
     network.dio.options.headers['Authorization'] = 'Bearer $token';
     try {
-      final response = await network.dio.get('/user/$ids');
+      final response = await network.dio.get('/user/$id');
       return UserModel.fromJson(response.data['data']['user']);
     } on DioError catch (e) {
       throw Exception(e.message);
@@ -284,10 +282,87 @@ class RepositoryImpl implements Repository {
       throw Exception(e.message);
     }
   }
+  
+  @override
+  Future<ForumModel?> getDataUserForum(int pageKey) async {
+    var token = await storageSecure.read(key: "token");
+    network.dio.options.headers['Authorization'] = 'Bearer $token';
+    try {
+      final response = await network.dio.get(
+        '/profile',
+        queryParameters: {
+          "page": pageKey,
+        },
+      );
+      return ForumModel.fromJson(response.data['data']);
+    } on DioError catch (e) {
+      throw Exception(e.message);
+    }
+  }
 
   @override
-  Future<Response> postProfile() {
-    // TODO: implement postProfile
+  Future<Response> postLike(int idForum) async {
+    var token = await storageSecure.read(key: "token");
+    network.dio.options.headers['Authorization'] = 'Bearer $token';
+    try {
+      final response = await network.dio.post(
+        '/posting/$idForum/likes',
+      );
+      return response;
+    } on DioError catch (e) {
+      throw Exception(e.message);
+    }
+  }
+
+  @override
+  Future<Response> postProfile({ required String name, required String email, required String description, required String born, required String academic, required String work, File? image}) async {
+    var token = await storageSecure.read(key: "token");
+    var id = await storageSecure.read(key: "id");
+    int ids = int.parse(id!);
+    network.dio.options.headers['Authorization'] = 'Bearer $token';
+    try {
+      var formData = FormData.fromMap({
+        "name": name,
+        "email": email,
+        "description" : description,
+        "born" : born,
+        "academic" : academic,
+        "work" : work,
+      });
+
+      if (image != null) {
+        formData.files.addAll(
+        [MapEntry("image", await MultipartFile.fromFile(image.path))]);
+    }
+
+    var response = await network.dio.post("/user/$ids",
+    data: formData,
+    options: Options(headers: {
+    "Content-Type": "multipart/form-data"
+    }));
+    return response;
+    } on DioError catch (e) {
+    throw Exception(e);
+    }
+  }
+
+  @override
+  Future<Response> postDelete(int idForum) async {
+    var token = await storageSecure.read(key: "token");
+    network.dio.options.headers['Authorization'] = 'Bearer $token';
+    try {
+      final response = await network.dio.delete(
+        '/posting/$idForum',
+      );
+      return response;
+    } on DioError catch (e) {
+      throw Exception(e.message);
+    }
+  }
+
+  @override
+  Future<Response> postUpdateForum({required int categoryId, required String title, required String description, File? image}) {
+    // TODO: implement postUpdateForum
     throw UnimplementedError();
   }
 }
